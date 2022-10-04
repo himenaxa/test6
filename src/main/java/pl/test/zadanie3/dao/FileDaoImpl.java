@@ -8,10 +8,9 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import java.util.ArrayList;
 import java.util.List;
 
-public class FileDaoImpl implements FileDao{
+public class FileDaoImpl implements FileDao {
     private EntityManagerFactory factory;
     private EntityManager entityManager;
 
@@ -19,8 +18,6 @@ public class FileDaoImpl implements FileDao{
         factory = Persistence.createEntityManagerFactory("myPersistenceUnit");
         entityManager = factory.createEntityManager();
     }
-
-
 
     @Override
     public void save(WorkspaceFile file) {
@@ -31,9 +28,8 @@ public class FileDaoImpl implements FileDao{
     }
 
     @Override
-    public WorkspaceFile load(String path) {
-        return entityManager.find(WorkspaceFile.class, path);
-
+    public WorkspaceFile load(String file) {
+        return entityManager.find(WorkspaceFile.class, file);
     }
 
     @Override
@@ -43,7 +39,6 @@ public class FileDaoImpl implements FileDao{
         criteria.from(WorkspaceFile.class);
         return entityManager.createQuery(criteria).getResultList();
     }
-
 
     @Override
     public void cleanUp() {

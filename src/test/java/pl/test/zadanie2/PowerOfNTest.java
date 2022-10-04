@@ -1,42 +1,45 @@
 package pl.test.zadanie2;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
-import java.sql.*;
+import java.math.BigInteger;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class PowerOfNTest {
-
-    private PowerOfN pofn;
-    @Mock
-    private Connection conn;
-
-    @Mock
+    private PowerOfN powerOfN;
     private Statement statement;
 
-    @Mock
-    private ResultSet resultSet;
 
     @Before
     public void init() throws SQLException {
-        MockitoAnnotations.openMocks(this);
-        pofn = new PowerOfN(conn);
+        Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/test6?useSSL=false&serverTimezone=UTC",
+                "root",
+                "root"
+        );
+        statement = conn.createStatement();
+        powerOfN = new PowerOfN(statement);
     }
 
     @Test
-    public void shouldBeOK() throws SQLException {
-        Mockito.when(resultSet.next()).thenReturn(false);
-        Mockito.when(statement.executeQuery("SELECT name FROM tables")).thenReturn(resultSet);
-        Mockito.when(conn.createStatement()).thenReturn(statement);
-
-        assertEquals(pofn.getPowerOfN(2), 2);
+    public void shouldBeEqualsWhenPowerNIsCalculated() throws SQLException {
+        assertEquals(powerOfN.getPowerOfN(6), BigInteger.valueOf(720));
+        statement.execute("delete from power_n where n = 6");
     }
+
+    @Test
+    public void shouldBeEqualsWhenPowerNIsTakenFromTable() throws SQLException {
+        powerOfN.getPowerOfN(6);
+        assertEquals(powerOfN.getPowerOfN(6), BigInteger.valueOf(720));
+        statement.execute("delete from power_n where n = 6");
+    }
+
 }
 
 /*

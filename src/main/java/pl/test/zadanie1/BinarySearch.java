@@ -1,6 +1,5 @@
 package pl.test.zadanie1;
 
-
 /*
 dana jest metoda int countStepsInBinarySearch(int[] array, int element)
 ktora policzy w ilu porownaniach zostanei znaleziony element w array,
@@ -11,6 +10,7 @@ import java.util.Arrays;
 
 public class BinarySearch {
     private int steps = 1;
+
     public int countStepsInBinarySearch(int[] array, int element) {
         int middle = (array.length / 2);
         if (array[middle] == element) {
