@@ -10,6 +10,7 @@ nastepnie napisz metode ktora na podstawie tego co jest w bazie znajdzie:
 package pl.test.zadanie3.service;
 
 import pl.test.zadanie3.dao.FileDaoImpl;
+import pl.test.zadanie3.exceptions.SearchedFileIsNotExistException;
 import pl.test.zadanie3.model.WorkspaceFile;
 
 import java.io.File;
@@ -17,10 +18,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 public class Exercise3Service {
@@ -31,6 +30,9 @@ public class Exercise3Service {
     }
 
     public void searchFiles(File file) throws IOException {
+        if(!file.exists()){
+            throw new SearchedFileIsNotExistException();
+        }
         if (file.isDirectory()) {
             for (File f : Objects.requireNonNull(file.listFiles())) {
                 searchFiles(f);
@@ -47,8 +49,8 @@ public class Exercise3Service {
         }
     }
 
-    public WorkspaceFile getLastModifiedFile() {
-        return Optional.ofNullable(fileDao.loadAll())
+    public WorkspaceFile getLastModifiedFile(List<WorkspaceFile> workspaceFileList) {
+        return Optional.ofNullable(workspaceFileList)
                 .orElseGet(Collections::emptyList)
                 .stream()
                 .filter(Objects::nonNull)
@@ -56,13 +58,23 @@ public class Exercise3Service {
                 .orElseThrow();
     }
 
-    public long countLastModifiedFiles(Instant lastTime) {
-        return Optional.ofNullable(fileDao.loadAll())
+    public WorkspaceFile getLastModifiedFile2() {
+        return (WorkspaceFile) fileDao.loadQuery("select * from workspacefile ORDER BY lastModified DESC Limit 1;").get(0);
+    }
+
+    public long countLastModifiedFiles(List<WorkspaceFile> workspaceFileList, Instant lastTime) {
+        return Optional.ofNullable(workspaceFileList)
                 .orElseGet(Collections::emptyList)
                 .stream()
                 .filter(Objects::nonNull)
+                .filter(f -> f.getLastModified() != null)
                 .filter(f -> f.getLastModified().isAfter(lastTime))
                 .count();
+    }
+
+    public long countLastModifiedFiles2(LocalDateTime lastTime) {
+        return fileDao.loadQuery("select * from workspacefile where lastModified > \"" + lastTime + "\";").size();
+
     }
 
 

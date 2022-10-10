@@ -6,23 +6,28 @@ ktora policzy w ilu porownaniach zostanei znaleziony element w array,
 array przyjmij ze jest zawsze posortowany nie malejąco.
  */
 
-import java.util.Arrays;
-
 public class BinarySearch {
-    private int steps = 1;
-
     public int countStepsInBinarySearch(int[] array, int element) {
-        int middle = (array.length / 2);
-        if (array[middle] == element) {
-            int temp = steps;
-            steps = 1;
-            return temp;
-        } else if (element > array[middle]) {
+        int first = 0;
+        int last = array.length - 1;
+        int mid = (first + last) / 2;
+        int steps = 0;
+
+        while (first <= last) {
             steps++;
-            return countStepsInBinarySearch(Arrays.copyOfRange(array, middle, array.length), element);
-        } else {
-            steps++;
-            return countStepsInBinarySearch(Arrays.copyOfRange(array, 0, middle), element);
+            if (array[mid] < element) {
+                first = mid + 1;
+            } else if (array[mid] == element) {
+                break;
+            } else {
+                last = mid - 1;
+            }
+            mid = (first + last) / 2;
         }
+        if (last < first) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        return steps;
     }
+
 }

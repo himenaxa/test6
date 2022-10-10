@@ -45,4 +45,15 @@ public class WorkspaceFile {
     public Instant getLastModified() {
         return lastModified;
     }
+
+    @Override
+    public String toString() {
+        return "WorkspaceFile{" +
+                "fileName='" + fileName + '\'' +
+                ", path='" + path + '\'' +
+                ", size=" + size +
+                ", created=" + created +
+                ", lastModified=" + lastModified +
+                '}';
+    }
 }

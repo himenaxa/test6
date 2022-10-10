@@ -12,5 +12,6 @@ public interface FileDao {
 
     List<WorkspaceFile> loadAll();
 
+    public List<WorkspaceFile> loadQuery(String query);
     void cleanUp();
 }

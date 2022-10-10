@@ -2,10 +2,7 @@ package pl.test.zadanie3.dao;
 
 import pl.test.zadanie3.model.WorkspaceFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
@@ -38,6 +35,11 @@ public class FileDaoImpl implements FileDao {
         CriteriaQuery<WorkspaceFile> criteria = builder.createQuery(WorkspaceFile.class);
         criteria.from(WorkspaceFile.class);
         return entityManager.createQuery(criteria).getResultList();
+    }
+
+    @Override
+    public List loadQuery(String query) {
+        return entityManager.createNativeQuery(query, WorkspaceFile.class).getResultList();
     }
 
     @Override
